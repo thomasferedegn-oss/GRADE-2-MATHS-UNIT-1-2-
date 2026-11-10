@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 2 Mathematics Unit 1 and 2 Exam - Grade_2_Mathematics_Unit1_and_2_Exam_v3.docx</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn:not(:disabled):hover { transform: scale(1.02); }
+        .correct-ans { background-color: #22c55e !important; color: white !important; border-color: #16a34a !important; }
+        .wrong-ans { background-color: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
+        .disabled-opt { opacity: 0.7; cursor: not-allowed; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden fade-in">
+        
+        <!-- Header -->
+        <div class="bg-blue-600 text-white p-6 text-center">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2">የ2ኛ ክፍል ሒሳብ አጠቃላይ ፈተና</h1>
+            <p class="text-blue-100 text-sm md:text-base">ምዕራፍ 1 እና 2 (Grade_2_Mathematics_Unit1_and_2_Exam_v3.docx)</p>
+        </div>
+
+        <!-- 1. Student Registration Section -->
+        <div id="registration-section" class="p-6 md:p-10">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">እባክዎ መረጃዎን ያስገቡ / Please enter your details</h2>
+            
+            <div id="reg-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-center">
+                እባክዎ ስም እና መለያ ቁጥር ያስገቡ! (Please enter both Name and ID)
+            </div>
+
+            <div class="space-y-4 max-w-md mx-auto">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">ሙሉ ስም / Full Name</label>
+                    <input type="text" id="studentName" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ስምዎን ያስገቡ / Enter Name">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">መለያ ቁጥር / ID Number</label>
+                    <input type="text" id="studentId" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="መለያ ቁጥር / Enter ID">
+                </div>
+                <button onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition duration-200">
+                    ፈተናውን ጀምር / Start Quiz
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. Quiz Section -->
+        <div id="quiz-section" class="hidden p-6 md:p-10">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <span class="text-gray-600 font-medium">ጥያቄ / Question: <span id="q-number" class="text-blue-600 font-bold">1</span> / 50</span>
+                <span class="text-gray-600 font-medium">ውጤት / Score: <span id="score-display" class="text-green-600 font-bold">0</span></span>
+            </div>
+
+            <div class="mb-8 min-h-[120px]">
+                <h3 id="question-text" class="text-xl font-semibold text-gray-800 leading-relaxed mb-6"></h3>
+                
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Options will be injected here -->
+                </div>
+            </div>
+
+            <!-- Instant Feedback Box -->
+            <div id="feedback-box" class="hidden mb-6 p-4 rounded-lg fade-in">
+                <h4 id="feedback-title" class="font-bold text-lg mb-2"></h4>
+                <div class="text-sm space-y-2">
+                    <p><strong class="font-semibold text-gray-900">ማብራሪያ:</strong> <span id="exp-amharic" class="text-gray-700"></span></p>
+                    <p><strong class="font-semibold text-gray-900">Explanation:</strong> <span id="exp-english" class="text-gray-700"></span></p>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex flex-wrap justify-between items-center gap-4 mt-8 border-t pt-6">
+                <button onclick="prevQuestion()" id="btn-back" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition duration-200 disabled:opacity-50">
+                    &larr; ወደ ኋላ / Back
+                </button>
+                <div class="flex gap-4 ml-auto">
+                    <button onclick="skipQuestion()" id="btn-skip" class="px-6 py-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded-lg font-medium transition duration-200">
+                        እለፍ / Skip
+                    </button>
+                    <button onclick="nextQuestion()" id="btn-next" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition duration-200">
+                        ቀጣይ / Next &rarr;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Results & Teacher Dashboard Section -->
+        <div id="results-section" class="hidden p-6 md:p-10 fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">ፈተናውን ጨርሰዋል! / Quiz Completed!</h2>
+                <p class="text-gray-600 mb-6">የተማሪ መረጃ እና ውጤት / Student Info & Final Score</p>
+                
+                <div class="bg-blue-50 rounded-xl p-6 inline-block w-full max-w-lg shadow-sm border border-blue-100 text-left">
+                    <p class="mb-2"><span class="font-bold text-gray-700">ስም / Name:</span> <span id="res-name" class="text-blue-800 font-medium"></span></p>
+                    <p class="mb-2"><span class="font-bold text-gray-700">መለያ / ID:</span> <span id="res-id" class="text-blue-800 font-medium"></span></p>
+                    <p class="text-2xl mt-4 text-center border-t border-blue-200 pt-4"><span class="font-bold text-gray-700">አጠቃላይ ውጤት / Final Score:</span> <span id="res-score" class="text-green-600 font-bold text-4xl ml-2"></span> <span class="text-gray-500 text-lg">/ 50</span></p>
+                </div>
+            </div>
+
+            <!-- Email Action -->
+            <div class="text-center mb-10">
+                <a id="email-btn" href="#" class="inline-flex items-center justify-center px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg transition duration-200 transform hover:-translate-y-1">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    ውጤቱን በኢሜል ላክ / Send Score via Email
+                </a>
+                <p class="text-sm text-gray-500 mt-2">ወደ መምህር / To: mesayferedegn2@gmail.com</p>
+            </div>
+
+            <!-- Teacher Dashboard Summary -->
+            <div class="mt-8 border-t pt-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center justify-between">
+                    <span>የመምህር ማጠቃለያ ገበታ / Teacher Dashboard Summary</span>
+                    <button onclick="toggleDashboard()" class="text-sm font-normal text-blue-600 hover:underline">አሳይ-ደብቅ / Toggle</button>
+                </h3>
+                
+                <div id="dashboard-table" class="overflow-x-auto hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-700">
+                                <th class="p-3 border">ቁ. / No.</th>
+                                <th class="p-3 border">የተማሪው መልስ / Student Ans</th>
+                                <th class="p-3 border">ትክክለኛ መልስ / Correct Ans</th>
+                                <th class="p-3 border">ሁኔታ / Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Quiz Data - 50 Questions directly from the prompt
+        // Option letters: 0=ሀ, 1=ለ, 2=ሐ, 3=መ
+        const quizData = [
+            { q: "1. መቶ ቁጥር ስንት ዜሮዎች አሉት?", opts: ["1", "2", "3", "4"], ans: 1, 
+              am: "100 የሚጻፈው በአንድ 1 እና በሁለት ዜሮዎች (00) ነው።", en: "The number 100 is written with one 1 and two zeros (00)." },
+            { q: "2. 'አምስት መቶ' በቁጥር ሲጻፍ የትኛው ነው?", opts: ["50", "500", "5000", "5"], ans: 1, 
+              am: "'አምስት መቶ' ማለት አምስት (5) በመቶ ቤት ሲቀመጥ 500 ይሆናል።", en: "'Five hundred' is written numerically as 500." },
+            { q: "3. 100, 200, 300, ___ ባዶ ቦታው ላይ የሚገባው ቁጥር ስንት ነው?", opts: ["400", "500", "350", "450"], ans: 0, 
+              am: "በመቶዎች እየቆጠርን ስለሆነ ከ300 ቀጥሎ 400 ይመጣል።", en: "Counting by hundreds, the number after 300 is 400." },
+            { q: "4. ከ 900 በመጀመር ወደ ትንሹ በመቶዎች ስንቆጥር ከ 900 ቀጥሎ የሚመጣው ቁጥር ስንት ነው?", opts: ["1000", "800", "700", "850"], ans: 1, 
+              am: "ወደ ኋላ በመቶዎች ስንቆጥር ከ900 አንድ መቶ ስንቀንስ 800 እናገኛለን።", en: "Counting backwards by hundreds, 900 minus 100 is 800." },
+            { q: "5. ከሚከተሉት ውስጥ በመቶዎች ስንቆጥር የምናገኘው የትኛው ነው?", opts: ["120", "230", "800", "455"], ans: 2, 
+              am: "በመቶዎች ስንቆጥር ቁጥሮቹ በሁለት ዜሮ ያልቃሉ (ለምሳሌ፡ 100፣ 200... 800)።", en: "When counting by perfect hundreds, the numbers end in two zeros (like 800)." },
+            { q: "6. የ 992 መቶ ቤት ቁጥር ስንት ነው?", opts: ["2", "9", "90", "92"], ans: 1, 
+              am: "992 ላይ የመቶ ቤት ቁጥር በስተግራ ያለው የመጀመሪያው '9' ነው።", en: "In 992, the hundreds place digit is the leftmost '9'." },
+            { q: "7. 3 መቶዎች፣ 2 አስሮች እና 4 አንዶች በቁጥር ስንት ይሆናል?", opts: ["234", "432", "324", "342"], ans: 2, 
+              am: "300 + 20 + 4 ሲደመር 324 ይሰጠናል።", en: "3 hundreds + 2 tens + 4 ones equals 324." },
+            { q: "8. 835 ስንት መቶዎች አሉት?", opts: ["3", "5", "8", "80"], ans: 2, 
+              am: "835 ውስጥ 8 መቶዎች አሉ። የመቶ ቤት ላይ ያለው ቁጥር 8 ስለሆነ።", en: "There are 8 hundreds in 835 (the hundreds digit is 8)." },
+            { q: "9. በቁጥር 759 ውስጥ የ 5 የቁጥር ቤት ዋጋ ምንድነው?", opts: ["የአንድ ቤት", "የአስር ቤት", "የመቶ ቤት", "የሺህ ቤት"], ans: 1, 
+              am: "በ 759 ውስጥ 5 በመሃል ስለሆነ የአስር ቤት ነው።", en: "In 759, the 5 is in the middle, which is the tens place." },
+            { q: "10. 485 ስንት አንዶች አሉት?", opts: ["4", "8", "5", "85"], ans: 2, 
+              am: "የመጨረሻው አሃዝ (በቀኝ በኩል) የአንድ ቤት ነው፣ ስለዚህ 5 ነው።", en: "The last digit on the right is the ones place, which is 5." },
+            { q: "11. 4 መቶዎች 2 አስሮች እና 7 አንዶች = ___", opts: ["427", "724", "247", "472"], ans: 0, 
+              am: "400 + 20 + 7 በድምሩ 427 ይሆናል።", en: "4 hundreds + 2 tens + 7 ones equals 427." },
+            { q: "12. የ 216 የመቶ ቤት ቁጥር ስንት ነው?", opts: ["1", "6", "2", "0"], ans: 2, 
+              am: "በ216 ውስጥ የመጀመሪያው አሃዝ (የመቶ ቤት) 2 ነው።", en: "The first digit in 216 is the hundreds place, which is 2." },
+            { q: "13. የ 789 የመቶ ቤት ቁጥር የሆነው የቱ ነው?", opts: ["8", "7", "9", "89"], ans: 1, 
+              am: "የመጀመሪያው አሃዝ 7 ስለሆነ የመቶ ቤቱ እርሱ ነው።", en: "The leftmost digit is 7, which represents the hundreds place." },
+            { q: "14. በ 120 እና 128 መካከል 4 እየዘለልን ስንቆጥር ከ 120 ቀጥሎ ስንት ይመጣል?", opts: ["122", "124", "126", "125"], ans: 1, 
+              am: "120 ላይ 4 ስንደምር 124 ይሰጠናል።", en: "Counting by 4s from 120 gives 124 (120 + 4)." },
+            { q: "15. ከ 100 እስከ 1000 ያሉ ሙሉ ቁጥሮችን ስናወዳድር የትኛው እውነት ነው?", opts: ["345 < 457", "345 > 457", "345 = 457", "457 < 345"], ans: 0, 
+              am: "345 ከ 457 ስለሚያንስ 345 < 457 ትክክል ነው።", en: "345 is less than 457, making 345 < 457 correct." },
+            { q: "16. ባዶ ቦታውን በ ትክክለኛው ምልክት ሙሉ: 57 ___ 45", opts: ["<", "=", ">", "+"], ans: 2, 
+              am: "57 ከ 45 ስለሚበልጥ፣ የሚበልጠው (>) ምልክት ይገባል።", en: "57 is greater than 45, so the '>' symbol is used." },
+            { q: "17. ከሚከተሉት ቁጥሮች ውስጥ ትልቁ የትኛው ነው?", opts: ["564", "247", "642", "700"], ans: 3, 
+              am: "ከምርጫዎቹ ውስጥ ከፍተኛው የመቶ ቤት ያለው 700 ነው።", en: "700 has the highest hundreds value among the choices." },
+            { q: "18. ከሚከተሉት ውስጥ እውነት የሆነው የቱ ነው?", opts: ["75 < 62", "300 < 290", "320 > 210", "199 > 400"], ans: 2, 
+              am: "320 ከ 210 ስለሚበልጥ (320 > 210) እውነት ነው።", en: "320 is greater than 210, so 320 > 210 is a true statement." },
+            { q: "19. ባዶ ቦታው ላይ የሚገባው ምልክት ምረጥ: 98 ___ 99", opts: [">", "<", "=", "-"], ans: 1, 
+              am: "98 ከ 99 ስለሚያንስ፣ የሚያንሰው (<) ምልክት ይገባል።", en: "98 is less than 99, so the '<' symbol is used." },
+            { q: "20. ቁጥሮችን ከትንሽ ወደ ትልቅ በቅደም ተከተል የተቀመጠው የቱ ነው?", opts: ["124, 190, 269", "269, 190, 124", "190, 124, 269", "190, 269, 124"], ans: 0, 
+              am: "124 ያንሳል ከ190፣ 190 ያንሳል ከ269። ይህ ከትንሽ ወደ ትልቅ ነው።", en: "124 < 190 < 269. This is ascending order." },
+            { q: "21. 90, 78, 34, 24, 18, 15 ይህ የቁጥር ቅደም ተከተል ምን ያሳያል?", opts: ["ከትንሽ ወደ ትልቅ", "ከትልቅ ወደ ትንሽ", "እየዘለሉ መቁጠር", "ሁሉም ትክክል ናቸው"], ans: 1, 
+              am: "ቁጥሮቹ ከትልቁ 90 ጀምረው ወደ ትንሹ 15 እየቀነሱ መጥተዋል።", en: "The numbers decrease from 90 to 15, showing descending order." },
+            { q: "22. 235 በአባከስ ሲገለጽ የ100 ቤት ላይ ስንት ጨሌዎች ይኖራሉ?", opts: ["5", "3", "2", "0"], ans: 2, 
+              am: "235 ላይ የመቶ ቤት ቁጥሩ 2 ነው፣ ስለዚህ 2 ጨሌዎች ይኖራሉ።", en: "The hundreds digit in 235 is 2, so the abacus will have 2 beads there." },
+            { q: "23. የቁጥር መስመር ምንን ያሳያል?", opts: ["የመደመር ምልክትን", "ቁጥሮችን በቅደም ተከተል የምንገልፅበት መስመር", "የመቀነስ ምልክትን", "የቁጥር ቤት ዋጋን ብቻ"], ans: 1, 
+              am: "የቁጥር መስመር ቁጥሮችን በትክክለኛ ቅደም ተከተላቸው እና እርቀታቸው ያሳያል።", en: "A number line represents numbers in their correct sequential order." },
+            { q: "24. 354 ከ 467 ያንሳል?", opts: ["እውነት", "ሀሰት", "መናገር አይቻልም", "እኩል ናቸው"], ans: 0, 
+              am: "አዎ፣ 354 ከ 467 በእርግጥ ያንሳል።", en: "Yes, it is true that 354 is less than 467." },
+            { q: "25. 752 ስንት አስሮች አሉት?", opts: ["7", "2", "5", "52"], ans: 2, 
+              am: "የአስር ቤት አሃዝ በመሃል ያለው 5 ነው።", en: "The tens digit is the middle number, which is 5." },
+            { q: "26. 154 + 810 = ___", opts: ["964", "864", "954", "960"], ans: 0, 
+              am: "100+800=900፣ 50+10=60፣ 4+0=4። ድምሩ 964 ነው።", en: "Adding places: 100+800=900, 50+10=60, 4+0=4. Total is 964." },
+            { q: "27. 324 + 512 = ___", opts: ["826", "836", "846", "812"], ans: 1, 
+              am: "300+500=800፣ 20+10=30፣ 4+2=6። ድምር 836።", en: "Adding the numbers directly gives 836." },
+            { q: "28. 25 + 34 = ___", opts: ["59", "69", "58", "49"], ans: 0, 
+              am: "20+30=50፣ 5+4=9። ድምሩ 59።", en: "20+30=50, 5+4=9. The total is 59." },
+            { q: "29. 157 + 432 = ___", opts: ["579", "589", "599", "569"], ans: 1, 
+              am: "100+400=500፣ 50+30=80፣ 7+2=9። በድምሩ 589።", en: "157 + 432 equals 589." },
+            { q: "30. የ 15 እና 43 ድምር ስንት ነው?", opts: ["57", "58", "59", "60"], ans: 1, 
+              am: "15 ሲደመር 43 እኩል ነው 58።", en: "The sum of 15 and 43 is 58." },
+            { q: "31. 320 + 435 = ___", opts: ["745", "755", "765", "735"], ans: 1, 
+              am: "300+400=700፣ 20+30=50፣ 0+5=5። ድምር 755።", en: "320 + 435 equals 755." },
+            { q: "32. 27 + 38 = ___ (በአለኝታ መደመር)", opts: ["65", "55", "75", "64"], ans: 0, 
+              am: "7+8=15 (5 ጽፈን 1 አለን)፣ 2+3+1=6። ድምር 65።", en: "7+8=15 (carry 1), 2+3+1=6. Total is 65." },
+            { q: "33. 424 + 378 = ___", opts: ["792", "802", "812", "702"], ans: 1, 
+              am: "4+8=12 (1 አለን)፣ 2+7+1=10 (1 አለን)፣ 4+3+1=8። ድምር 802።", en: "Adding with carry overs gives 802." },
+            { q: "34. 178 + 47 = ___", opts: ["215", "225", "235", "205"], ans: 1, 
+              am: "178 ላይ 47 ስንደምር 225 ይሆናል።", en: "178 + 47 equals 225." },
+            { q: "35. 345 + 23 = ___", opts: ["368", "575", "548", "322"], ans: 0, 
+              am: "345 + 23 = 368 ነው።", en: "Simply adding 23 to 345 gives 368." },
+            { q: "36. 568 + 213 = ___", opts: ["355", "761", "781", "661"], ans: 2, 
+              am: "8+3=11(1 አለን)፣ 6+1+1=8፣ 5+2=7። 781።", en: "568 + 213 = 781." },
+            { q: "37. 859 + 78 = ___", opts: ["937", "927", "947", "917"], ans: 0, 
+              am: "859 ሲደመር 78 እኩል ነው 937።", en: "859 + 78 equals 937." },
+            { q: "38. 98 - 72 = ___", opts: ["16", "26", "36", "28"], ans: 1, 
+              am: "9-7=2 እና 8-2=6። 26 ይሆናል።", en: "98 minus 72 equals 26." },
+            { q: "39. 220 - 110 = ___", opts: ["110", "100", "120", "210"], ans: 0, 
+              am: "የ220 ግማሽ 110 ነው። 220-110=110።", en: "220 minus 110 equals 110." },
+            { q: "40. 398 - 92 = ___", opts: ["304", "306", "308", "390"], ans: 1, 
+              am: "8-2=6, 9-9=0, 3-0=3. ስለዚህ 306 ነው።", en: "Subtracting 92 from 398 leaves 306." },
+            { q: "41. 535 - 202 = ___", opts: ["323", "333", "343", "313"], ans: 1, 
+              am: "5-2=3, 3-0=3, 5-2=3. ውጤቱ 333።", en: "535 - 202 equals 333." },
+            { q: "42. 657 - 429 = ___ (በብድር መቀነስ)", opts: ["218", "228", "238", "208"], ans: 1, 
+              am: "7 ከ 9 ስለማይቀነስ እንበደራለን (17-9=8)፣ 4-2=2፣ 6-4=2። ድምር 228።", en: "Subtracting with borrowing gives 228." },
+            { q: "43. 468 - 351 = ___", opts: ["819", "217", "710", "117"], ans: 3, 
+              am: "8-1=7, 6-5=1, 4-3=1. ውጤቱ 117።", en: "468 - 351 equals 117." },
+            { q: "44. 781 - 659 = ___", opts: ["122", "920", "120", "459"], ans: 0, 
+              am: "781 - 659 ሲሰላ 122 ይሆናል።", en: "781 minus 659 is 122." },
+            { q: "45. 98 - 47 = ___", opts: ["41", "51", "61", "31"], ans: 1, 
+              am: "8-7=1፣ 9-4=5። ውጤቱ 51።", en: "98 - 47 = 51." },
+            { q: "46. ትምህርት ቤት 536 ዴስኮች ነበሩት፣ 287 ተጨማሪ ገዛ። በአጠቃላይ ስንት ዴስኮች አሉት?", opts: ["713", "813", "823", "723"], ans: 2, 
+              am: "536 + 287 = 823", en: "536 existing + 287 new = 823 desks total." },
+            { q: "47. ወ/ሮ ኤደን 850 ብር ይዘው ገበያ ሄዱ፣ በ 130 ብር መጽሐፍ ገዙ። ስንት ብር ቀራቸው?", opts: ["720", "710", "730", "620"], ans: 0, 
+              am: "850 - 130 = 720 ብር ቀራቸው።", en: "850 - 130 = 720 remaining." },
+            { q: "48. 9 ኳሶች ነበሩ፣ 7 ኳሶች ቢቀነሱ ስንት ይቀራል?", opts: ["1", "2", "3", "4"], ans: 1, 
+              am: "ከ9 ላይ 7 ሲቀነስ 2 ይቀራል።", en: "9 minus 7 leaves 2 balls." },
+            { q: "49. አብደላ 56 ብር አለው። 134 ብር አባቱ እና 54 ብር እህቱ ጨመሩለት። በአጠቃላይ ስንት አለው?", opts: ["188", "110", "244", "190"], ans: 2, 
+              am: "56 + 134 + 54 = 244 ብር አለው።", en: "56 + 134 + 54 = 244 total." },
+            { q: "50. በክፍል ውስጥ 60 ተማሪዎች አሉ። 34ቱ ሴቶች ከሆኑ፣ ስንት ወንዶች አሉ?", opts: ["24", "26", "36", "16"], ans: 1, 
+              am: "ከ60 ላይ 34ቱን ሴቶች ስንቀንስ፣ 26 ወንዶች ይቀራሉ።", en: "60 total minus 34 girls leaves 26 boys." }
+        ];
+
+        // App State
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let studentName = "";
+        let studentId = "";
+        // Arrays to track user answers. -1 means skipped, null means unattempted.
+        let userAnswers = new Array(quizData.length).fill(null); 
+        const labels = ["ሀ", "ለ", "ሐ", "መ"];
+
+        // DOM Elements
+        const regSection = document.getElementById("registration-section");
+        const quizSection = document.getElementById("quiz-section");
+        const resSection = document.getElementById("results-section");
+        const regError = document.getElementById("reg-error");
+        const optsContainer = document.getElementById("options-container");
+        const feedbackBox = document.getElementById("feedback-box");
+        
+        // Functions
+        function startQuiz() {
+            const nameInput = document.getElementById("studentName").value.trim();
+            const idInput = document.getElementById("studentId").value.trim();
+            
+            if (!nameInput || !idInput) {
+                regError.classList.remove("hidden");
+                return;
+            }
+            
+            studentName = nameInput;
+            studentId = idInput;
+            
+            regSection.classList.add("hidden");
+            quizSection.classList.remove("hidden");
+            
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentQuestionIndex];
+            
+            // Update Headers
+            document.getElementById("q-number").innerText = currentQuestionIndex + 1;
+            document.getElementById("score-display").innerText = score;
+            
+            // Render Question Text
+            document.getElementById("question-text").innerText = q.q;
+            
+            // Render Options
+            optsContainer.innerHTML = "";
+            feedbackBox.classList.add("hidden"); // hide feedback initially
+            
+            q.opts.forEach((optText, i) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 bg-white hover:border-blue-400 focus:outline-none font-medium text-gray-700 flex items-center";
+                btn.innerHTML = `<span class="inline-block w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center mr-3 font-bold">${labels[i]}</span> ${optText}`;
+                
+                // If question was already answered, restore state
+                if (userAnswers[currentQuestionIndex] !== null) {
+                    btn.disabled = true;
+                    btn.classList.add("disabled-opt");
+                    
+                    const answeredId = userAnswers[currentQuestionIndex];
+                    if (i === q.ans) {
+                        btn.classList.add("correct-ans");
+                    } else if (i === answeredId && answeredId !== q.ans) {
+                        btn.classList.add("wrong-ans");
+                    }
+                } else {
+                    btn.onclick = () => selectOption(i, btn);
+                }
+                
+                optsContainer.appendChild(btn);
+            });
+
+            // Show feedback if already answered (but not if skipped with -1)
+            if (userAnswers[currentQuestionIndex] !== null && userAnswers[currentQuestionIndex] !== -1) {
+                showFeedback(userAnswers[currentQuestionIndex] === q.ans);
+            }
+
+            // Update Nav Buttons
+            document.getElementById("btn-back").disabled = currentQuestionIndex === 0;
+            const nextBtn = document.getElementById("btn-next");
+            
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextBtn.innerText = "ጨርስ እና ላክ / Submit";
+                nextBtn.classList.replace("bg-blue-600", "bg-green-600");
+                nextBtn.classList.replace("hover:bg-blue-700", "hover:bg-green-700");
+            } else {
+                nextBtn.innerHTML = "ቀጣይ / Next &rarr;";
+                nextBtn.classList.replace("bg-green-600", "bg-blue-600");
+                nextBtn.classList.replace("hover:bg-green-700", "hover:bg-blue-700");
+            }
+        }
+
+        function selectOption(selectedIndex, btnElement) {
+            const q = quizData[currentQuestionIndex];
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            
+            // Disable all buttons
+            const allBtns = optsContainer.querySelectorAll("button");
+            allBtns.forEach(b => {
+                b.disabled = true;
+                b.classList.add("disabled-opt");
+            });
+
+            const isCorrect = selectedIndex === q.ans;
+            if (isCorrect) {
+                score++;
+                document.getElementById("score-display").innerText = score;
+                btnElement.classList.add("correct-ans");
+            } else {
+                btnElement.classList.add("wrong-ans");
+                allBtns[q.ans].classList.add("correct-ans"); // Highlight correct answer
+            }
+            
+            showFeedback(isCorrect);
+        }
+
+        function showFeedback(isCorrect) {
+            const q = quizData[currentQuestionIndex];
+            feedbackBox.classList.remove("hidden");
+            
+            const titleEl = document.getElementById("feedback-title");
+            if (isCorrect) {
+                feedbackBox.className = "mb-6 p-4 rounded-lg fade-in bg-green-50 border border-green-200";
+                titleEl.className = "font-bold text-lg mb-2 text-green-700";
+                titleEl.innerText = "ትክክል ነው! / Correct!";
+            } else {
+                feedbackBox.className = "mb-6 p-4 rounded-lg fade-in bg-red-50 border border-red-200";
+                titleEl.className = "font-bold text-lg mb-2 text-red-700";
+                titleEl.innerText = `ስህተት! / Incorrect! (ትክክለኛው መልስ: ${labels[q.ans]})`;
+            }
+
+            document.getElementById("exp-amharic").innerText = q.am;
+            document.getElementById("exp-english").innerText = q.en;
+        }
+
+        function nextQuestion() {
+            // If completely unattempted when clicking next, mark as skipped
+            if (userAnswers[currentQuestionIndex] === null) {
+                userAnswers[currentQuestionIndex] = -1;
+            }
+
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function skipQuestion() {
+            if (userAnswers[currentQuestionIndex] === null) {
+                userAnswers[currentQuestionIndex] = -1; // -1 denotes skipped
+            }
+            nextQuestion();
+        }
+
+        function showResults() {
+            quizSection.classList.add("hidden");
+            resSection.classList.remove("hidden");
+            
+            document.getElementById("res-name").innerText = studentName;
+            document.getElementById("res-id").innerText = studentId;
+            document.getElementById("res-score").innerText = score;
+
+            // Generate Email Link
+            const subject = encodeURIComponent(`Grade 2 Math Quiz Results: ${studentName}`);
+            const body = encodeURIComponent(`Student Name: ${studentName}\nStudent ID: ${studentId}\nFinal Score: ${score} / 50\n\nGenerated by Auto-Grading System.`);
+            const mailtoLink = `mailto:mesayferedegn2@gmail.com?subject=${subject}&body=${body}`;
+            document.getElementById("email-btn").href = mailtoLink;
+
+            buildDashboard();
+        }
+
+        function buildDashboard() {
+            const tbody = document.getElementById("dashboard-body");
+            tbody.innerHTML = "";
+            
+            quizData.forEach((q, index) => {
+                const userAnsIndex = userAnswers[index];
+                
+                let statusLabel = "";
+                let statusClass = "";
+                let userAnsText = "";
+                
+                if (userAnsIndex === null || userAnsIndex === -1) {
+                    statusLabel = "ታለፈ / Skipped";
+                    statusClass = "text-yellow-600 bg-yellow-100";
+                    userAnsText = "-";
+                } else if (userAnsIndex === q.ans) {
+                    statusLabel = "ትክክል / Correct";
+                    statusClass = "text-green-600 bg-green-100";
+                    userAnsText = labels[userAnsIndex];
+                } else {
+                    statusLabel = "ስህተት / Wrong";
+                    statusClass = "text-red-600 bg-red-100";
+                    userAnsText = labels[userAnsIndex];
+                }
+
+                const tr = document.createElement("tr");
+                tr.className = "border-b hover:bg-gray-50";
+                tr.innerHTML = `
+                    <td class="p-3 border font-medium">${index + 1}</td>
+                    <td class="p-3 border">${userAnsText}</td>
+                    <td class="p-3 border font-bold text-green-700">${labels[q.ans]}</td>
+                    <td class="p-3 border">
+                        <span class="px-2 py-1 text-xs font-semibold rounded ${statusClass}">${statusLabel}</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleDashboard() {
+            const table = document.getElementById("dashboard-table");
+            table.classList.toggle("hidden");
+        }
+    </script>
+</body>
+</html>
